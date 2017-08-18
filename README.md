@@ -19,7 +19,7 @@ The vehicle state is described by 4 values.
 ![State Visualization][image1]
 
 ## Future States
-From any given state it is possible to predict any future states - the trajectory. The quality of the forecast depends on the quality of the model. The farther you look into the future using the motion model of the vehicle the more all the non accounted influencing factors accumulate to a deviation from the real world. The Kinematic Model used in this project is simple and does not account for:
+From any given state it is possible to predict any future states - the trajectory. The quality of the forecast depends on the quality of the model. The farther you look into the future using the motion model of the vehicle the more all the non accounted influencing factors accumulate to a deviation from the real world. The Kinematic Model used in this project is simple and does not account for:  
   * slick roads
   * uneven ground
   * wind
@@ -32,12 +32,12 @@ To calculate future states the Kinematic Model uses this state transition functi
 
 ## Actuations
 Actuations like steering, accelerating and braking change the trajectory (predicted future states).
-The actuations in the project are:
+The actuations in the project are:  
   * delta: steering
   * a: accelerating and braking (negative acceleration)
 
 ## Cross-Track- And Orientation-Error
-The deviation of the actual vehicle state and the desired state is described by 2 values.
+The deviation of the actual vehicle state and the desired state is described by 2 values:  
   * cte: the cross track error is the difference between the desired and actual position.
   * epsi: the orientation error is the difference between the desired and actual orientation.
 ![Errors][image3]
@@ -52,7 +52,7 @@ In this project I choose 14 future steps with a timestep of 0.15 seconds. This s
 ## Preprocessing MPC
 The line that is considered to be the optimal driving line is in the middle of the lane. The simulator delivers the next 6 point of this reference line in global coordinate system.
 
-These calculations are performed prior to the MPC:
+These calculations are performed prior to the MPC:  
   * The reference points are transformed in the vehicle coordinate system where the x-axis is in the heading direction and the y-axis is 90 degrees to the left of the heading.
   * A 3rd-degree-polynomial is fitted to the refence line using the polyfit-function.
   * The CTE and EPSI is calculated for later use in the cost function of the optimizer.
@@ -74,7 +74,7 @@ When assessing the trajectories these parameters are used:
   f: change of steering: to penalize abrupt use of steering
   g: change of accelerator/brake: to penalize abrupt use of steering
 
-This results in this cost function (a' = a in t+1, delta' = delta in t+1):
+This results in this cost function (a' = a in t+1, delta' = delta in t+1):  
 cost =  a * cte^2 +
         b * epsi^2 +
         c * (v - vmax)^2 +
