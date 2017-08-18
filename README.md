@@ -1,4 +1,103 @@
-# CarND-Controls-MPC
+# **MPC - Model-Predictive-Control** 
+
+**Build a MPC-Controller to control a race car simulation**
+
+[//]: # (Image References)
+
+[image1]: ./media/state_visualization.png.png "State"
+[image2]: ./media/kinematic_model_state_transition_functions.png "Kinematic Model"
+[image3]: ./media/cte_epsi.png "Errors"
+[image4]: ./media/trajectory_polyfit.png "Polyfit"
+
+## The State Variables
+The vehicle state is described by 4 values.
+  * px: x-coordinate of vehicle location in global COS
+  * py: y-coordinate of vehicle location in global COS
+  * psi: orientation / heading of vehicle
+  * vi: velocity of vehicle
+![State Visualization][image1]
+
+## Future States
+From any given state it is possible to predict any future states - the trajectory. The quality of the forecast depends on the quality of the model. The farther you look into the future using the motion model of the vehicle the more all the non accounted influencing factors accumulate to a deviation from the real world. The Kinematic Model used in this project is simple and does not account for:
+  * slick roads
+  * uneven ground
+  * wind
+  * tire behavior
+  * ...
+
+## Kinematic Model
+To calculate future states the Kinematic Model uses this state transition functions:
+![Kinematic Model][image2]
+
+## Actuations
+Actuations like steering, accelerating and braking change the trajectory (predicted future states).
+The actuations in the project are:
+  * delta: steering
+  * a: accelerating and braking (negative acceleration)
+
+## Cross-Track- And Orientation-Error
+The deviation if the actual vehicle state and the desired state is described by 2 values.
+  * cte: the cross track error is the difference between the desired and actual position.
+  * epsi: the orientation error is the difference between the desired and actual orientation.
+![Errors][image3]
+
+## Trajectory Parameter
+To calculate a trajectory, the amount of future steps and their time distance has to be defined.
+Many steps would need more calculation effort and my experiments showed that the calculated trajectory that is returned from the optimizer, when I use a lot of steps, does not improve the quality of the path.
+A low number of steps reduces the length and the prediction quality for the further away sections of the path.
+A bigger timestep reduses the resolution. The vehicle executes only the optimized actuations of the next waypoint. If the distance to this next waypoint is to big, the qualtity of the reaction is reduced.
+In this project I choose 14 future steps with a timestep of 0.15 seconds. This setting provides enough trajectory points to find an very good path towards the refence line that is considered the optimal line for the vehicle.
+
+## Preprocessing MPC
+The line that is considered to be the optimal driving line is in the middle of the lane. The simulator delivers the next 6 point of this reference line in global coordinate system.
+
+These calculations are permormed prior to the MPC:
+  * This points are transformed in the vehicle coordinate system where the x-axis is in the heading direction and the y-axis is 90 degrees to the left of the heading.
+  * A 3rd-degree-polynomial is fitted to the refence line using the polyfit-function.
+  * The CTE and EPSI is calculated for later use in the cost function of the optimizer.
+  * To account for the system latency, the state that is signaled from the simulator is predicted into the future, where dt = latency, by using the actual actuator values.
+The MPC is called with the poyfit-coefficients, the modified state (latency) and the errors (cte, epsi).
+![Polyfit][image4]
+
+## MPC - Model-Predictive-Control
+The MPC varies all possible actuations in all future steps and calculates the resulting trajectories. These possible trajectories are assessed by using the cost function. The trajectory with the lowest cost is considered an optimal trajectory. To follow that trajectory the used actuation values for the next timestep are send to the vehicle in the simulator.
+
+## Cost Function
+When assessing the trajectories these parameters are used:
+  a: Cross-Track-Error CTE: to incentivate a movement towards the reference line
+  b: orientation error EPSI: to steer towards the optimal orientation
+  c: velocity difference: to accelerate/brake if vehicle != desired velocity
+  d: use of steering: to improve the driving experience
+  e: use of accelerator/brake: to improve the driving experience
+  f: change of steering: to penalize abrupt use of steering
+  g: change of accelerator/brake: to penalize abrupt use of steering
+
+This results in this cost function (a' = a in t+1, delta' = delta in t+1):
+cost =  a * cte^2 +
+        b * epsi^2 +
+        c * (v - vmax)^2 +
+        d * delta^2 +
+        e * a^2 +
+        f * (a` - a)^2 +
+        g * (delta` - delta)^2
+
+To incentivate an optimal (in my opinion) driving behavior, I choose these weights:
+  a = 2000
+  b = 1500
+  c = 1
+  d = 100
+  e = 10
+  f = 10
+  g = 10
+
+## Result of Project - Video With Simulator
+This is how it looks like when the simulator drives the car around the track with the reference line in yellow and the optimal trajectory in green.
+
+[![Model Predictive Control](./media/placeholder_video.png)](https://youtu.be/eHXuPnFPqUM "Model Predictive Control")
+
+---
+
+# Original README of Udacity CarND-Controls-MPC-Project
 Self-Driving Car Engineer Nanodegree Program
 
 ---
