@@ -11,11 +11,12 @@
 [image5]: ./media/optimize.png "Trajectories"
 
 ## The State Variables
-The vehicle state is described by 4 values.
-  * px: x-coordinate of vehicle location in global COS
-  * py: y-coordinate of vehicle location in global COS
-  * psi: orientation / heading of vehicle
-  * vi: velocity of vehicle
+The vehicle state is described by 4 values.  
+  * px: x-coordinate of vehicle location in global COS  
+  * py: y-coordinate of vehicle location in global COS  
+  * psi: orientation / heading of vehicle  
+  * vi: velocity of vehicle  
+    
 ![State Visualization][image1]
 
 ## Future States
@@ -75,7 +76,8 @@ When assessing the trajectories these parameters are used:
   g: change of accelerator/brake: to penalize abrupt use of steering
 
 This results in this cost function (a' = a in t+1, delta' = delta in t+1):  
-cost =  a * cte^2 +  
+cost =  
+        a * cte^2 +  
         b * epsi^2 +  
         c * (v - vmax)^2 +  
         d * delta^2 +  
