@@ -75,22 +75,22 @@ When assessing the trajectories these parameters are used:
   g: change of accelerator/brake: to penalize abrupt use of steering
 
 This results in this cost function (a' = a in t+1, delta' = delta in t+1):  
-cost =  a * cte^2 +
-        b * epsi^2 +
-        c * (v - vmax)^2 +
-        d * delta^2 +
-        e * a^2 +
-        f * (a` - a)^2 +
-        g * (delta` - delta)^2
-
-To incentivate an optimal (in my opinion) driving behavior, I choose these weights:
-  a = 2000
-  b = 1500
-  c = 1
-  d = 100
-  e = 10
-  f = 10
-  g = 10
+cost =  a * cte^2 +  
+        b * epsi^2 +  
+        c * (v - vmax)^2 +  
+        d * delta^2 +  
+        e * a^2 +  
+        f * (a' - a)^2 +  
+        g * (delta' - delta)^2  
+  
+To incentivate an optimal (in my opinion) driving behavior, I choose these weights:  
+  a = 2000  
+  b = 1500  
+  c = 1  
+  d = 100  
+  e = 10  
+  f = 10  
+  g = 10  
 
 ## Result of Project - Video With Simulator
 This is how it looks like when the simulator drives the car around the track with the reference line in yellow and the optimal trajectory in green.
