@@ -4,7 +4,7 @@
 
 [//]: # (Image References)
 
-[image1]: ./media/state_visualization.png.png "State"
+[image1]: ./media/state_visualization.png "State"
 [image2]: ./media/kinematic_model_state_transition_functions.png "Kinematic Model"
 [image3]: ./media/cte_epsi.png "Errors"
 [image4]: ./media/trajectory_polyfit.png "Polyfit"
@@ -36,17 +36,17 @@ The actuations in the project are:
   * a: accelerating and braking (negative acceleration)
 
 ## Cross-Track- And Orientation-Error
-The deviation if the actual vehicle state and the desired state is described by 2 values.
+The deviation of the actual vehicle state and the desired state is described by 2 values.
   * cte: the cross track error is the difference between the desired and actual position.
   * epsi: the orientation error is the difference between the desired and actual orientation.
 ![Errors][image3]
 
 ## Trajectory Parameter
 To calculate a trajectory, the amount of future steps and their time distance has to be defined.
-Many steps would need more calculation effort and my experiments showed that the calculated trajectory that is returned from the optimizer, when I use a lot of steps, does not improve the quality of the path.
-A low number of steps reduces the length and the prediction quality for the further away sections of the path.
-A bigger timestep reduses the resolution. The vehicle executes only the optimized actuations of the next waypoint. If the distance to this next waypoint is to big, the qualtity of the reaction is reduced.
-In this project I choose 14 future steps with a timestep of 0.15 seconds. This setting provides enough trajectory points to find an very good path towards the refence line that is considered the optimal line for the vehicle.
+Many steps would need more calculation effort and my experiments showed that the calculated trajectory that is returned from the optimizer, when I use a lot of steps, does not improve the quality of the path.  
+A low number of steps reduces the length and the prediction quality for the further away sections of the path.  
+A bigger timestep reduses the resolution. The vehicle executes only the optimized actuations of the next waypoint. If the distance to this next waypoint is to big, the qualtity of the reaction is reduced.  
+In this project I choose 14 future steps with a timestep of 0.15 seconds. This setting provides enough trajectory points to find an very good path towards the refence line that is considered the optimal line for the vehicle.  
 
 ## Preprocessing MPC
 The line that is considered to be the optimal driving line is in the middle of the lane. The simulator delivers the next 6 point of this reference line in global coordinate system.
