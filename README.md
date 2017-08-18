@@ -8,6 +8,7 @@
 [image2]: ./media/kinematic_model_state_transition_functions.png "Kinematic Model"
 [image3]: ./media/cte_epsi.png "Errors"
 [image4]: ./media/trajectory_polyfit.png "Polyfit"
+[image5]: ./media/optimize.png "Trajectories"
 
 ## The State Variables
 The vehicle state is described by 4 values.
@@ -51,8 +52,8 @@ In this project I choose 14 future steps with a timestep of 0.15 seconds. This s
 ## Preprocessing MPC
 The line that is considered to be the optimal driving line is in the middle of the lane. The simulator delivers the next 6 point of this reference line in global coordinate system.
 
-These calculations are permormed prior to the MPC:
-  * This points are transformed in the vehicle coordinate system where the x-axis is in the heading direction and the y-axis is 90 degrees to the left of the heading.
+These calculations are performed prior to the MPC:
+  * The reference points are transformed in the vehicle coordinate system where the x-axis is in the heading direction and the y-axis is 90 degrees to the left of the heading.
   * A 3rd-degree-polynomial is fitted to the refence line using the polyfit-function.
   * The CTE and EPSI is calculated for later use in the cost function of the optimizer.
   * To account for the system latency, the state that is signaled from the simulator is predicted into the future, where dt = latency, by using the actual actuator values.
@@ -61,6 +62,7 @@ The MPC is called with the poyfit-coefficients, the modified state (latency) and
 
 ## MPC - Model-Predictive-Control
 The MPC varies all possible actuations in all future steps and calculates the resulting trajectories. These possible trajectories are assessed by using the cost function. The trajectory with the lowest cost is considered an optimal trajectory. To follow that trajectory the used actuation values for the next timestep are send to the vehicle in the simulator.
+![Trajectories][image5]
 
 ## Cost Function
 When assessing the trajectories these parameters are used:
